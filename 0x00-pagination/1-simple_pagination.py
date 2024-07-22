@@ -36,4 +36,3 @@ class Server:
         startPage = (page - 1) * page_size
         endPage = page * page_size
         return (startPage, endPage)
-      
