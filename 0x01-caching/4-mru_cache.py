@@ -1,7 +1,6 @@
 #!/usr/bin/python3
 """ MRUCache module
 """
-from collections import OrderedDict
 BaseCaching = __import__("base_caching").BaseCaching
 
 
