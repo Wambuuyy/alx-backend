@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """
-flask app
+This module contains a basic Flask
+application setup with Babel for i18n.
 """
 from flask import Flask, render_template
 from flask_babel import Babel
@@ -27,3 +28,6 @@ def index():
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port="5000")
+    """
+    Runs the Flask application.
+    """
