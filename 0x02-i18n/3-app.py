@@ -22,10 +22,9 @@ babel = Babel(app)
 def get_locale():
     """Function to select the best match for the user's language
     from the supported languages.
-    
     This function uses the 'Accept-Language' header from
-    the request to determine the 
-    best match language from the list of supported languages."""
+    the request to determine the best match
+    language from the list of supported languages."""
     return request.accept_languages.best_match(app.config['LANGUAGES'])
 
 
