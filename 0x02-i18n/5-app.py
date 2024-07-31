@@ -41,9 +41,11 @@ def before_request():
 @babel.localeselector
 def get_locale() -> str:
     """doc doc doc"""
-    if request.args.get("locale") in app.config["LANGUAGES"]:
-        return request.args.get("locale")
-    return request.accept_languages.best_match(app.config["LANGUAGES"])
+    user_locale = getattr(g, 'user', {}).get('locale')
+    if user_locale and user_locale in app.config['LANGUAGES']:
+       return user_locale
+    return request.accept_languages.best_match(app.config['LANGUAGES'])
+
 
 
 @app.route("/")
