@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""doc"""
+"""Flask app with Babel for i18n"""
 from flask import Flask, render_template, request
 from flask_babel import Babel, _
 
