@@ -7,7 +7,7 @@
     <h1>{{ _('Hello world!') }}</h1>
     <p>
         {% if g.user %}
-            {{ _('You are logged in as %(username)s.', username=g.user.name) }}
+            {{ _('You are logged in as %(username)s.', username=g.user.name)'.'}}
         {% else %}
             {{ _('You are not logged in.') }}
         {% endif %}

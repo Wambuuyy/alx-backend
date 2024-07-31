@@ -25,7 +25,7 @@ users = {
 
 
 def get_user() -> dict:
-    """doc doc doc"""
+    """Get user from URL parameter"""
     user_id = request.args.get("login_as")
     if user_id is not None and int(user_id) in users:
         return users[int(user_id)]
@@ -34,13 +34,13 @@ def get_user() -> dict:
 
 @app.before_request
 def before_request():
-    """doc doc doc"""
+    """Set global user before handling the request"""
     g.user = get_user()
 
 
 @babel.localeselector
 def get_locale() -> str:
-    """doc doc doc"""
+    """Get locale from URL parameter or user settingsc"""
     user_locale = getattr(g, 'user', {}).get('locale')
     if user_locale and user_locale in app.config['LANGUAGES']:
        return user_locale
