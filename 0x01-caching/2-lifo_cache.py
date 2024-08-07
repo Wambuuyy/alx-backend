@@ -1,34 +1,31 @@
-#!/usr/bin/python3
-""" 2-lifo_cache module
+#!/usr/bin/env python3
+""" LIFO Caching module
 """
-BaseCaching = __import__('base_caching').BaseCaching
 
+from base_caching import BaseCaching
 
 class LIFOCache(BaseCaching):
-    """ LIFO caching system """
+    """ LIFOCache defines a Last In First Out caching system """
 
     def __init__(self):
-        """ Initialize the class """
+        """ Initialize """
         super().__init__()
-        self.stack = []
+        self.order = []
 
     def put(self, key, item):
         """ Add an item in the cache """
         if key is None or item is None:
             return
 
-        # Add the key to the stack
-        self.stack.append(key)
+        if key in self.cache_data:
+            self.order.remove(key)
+        elif len(self.cache_data) >= self.MAX_ITEMS:
+            last = self.order.pop()
+            del self.cache_data[last]
+            print(f"DISCARD: {last}")
 
-        # Add the item to the cache
         self.cache_data[key] = item
-
-        # If the cache exceeds the maximum items,
-        # discard the last item put in cache (LIFO)
-        if len(self.cache_data) > BaseCaching.MAX_ITEMS:
-            last_key = self.stack.pop(-2)
-            del self.cache_data[last_key]
-            print(f"DISCARD: {last_key}")
+        self.order.append(key)
 
     def get(self, key):
         """ Get an item by key """
