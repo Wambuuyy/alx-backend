@@ -1,18 +1,17 @@
 #!/usr/bin/python3
-""" 100-lfu_cache module
-"""
-BaseCaching = __import__("base_caching").BaseCaching
+""" 4. LFU Caching """
+
+from base_caching import BaseCaching
 
 
 class LFUCache(BaseCaching):
-    """ LFU caching system """
+    """ LFUCache defines a Least Frequently Used caching system """
 
     def __init__(self):
-        """ Initialize the class """
+        """ Initialize """
         super().__init__()
-        self.freq = {}
-        self.usage = {}
-        self.time = 0
+        self.usage_frequency = {}
+        self.usage_order = []
 
     def put(self, key, item):
         """ Add an item in the cache """
@@ -20,44 +19,28 @@ class LFUCache(BaseCaching):
             return
 
         if key in self.cache_data:
-            # Update the value and increase frequency
-            self.cache_data[key] = item
-            self.freq[key] += 1
-        else:
-            # Add the item to the cache and set frequency to 1
-            if len(self.cache_data) >= BaseCaching.MAX_ITEMS:
-                # Find the least frequently used item
-                min_freq = min(self.freq.values(), default=0)
-                least_freq_keys = [k for k, v in self.freq.items()
-                                   if v == min_freq]
+            self.usage_order.remove(key)
+        elif len(self.cache_data) >= self.MAX_ITEMS:
+            least_frequent = min(self.usage_frequency.values())
+            least_frequent_keys = [k for k, v in self.usage_frequency.items() if v == least_frequent]
+            if len(least_frequent_keys) > 1:
+                oldest_key = next(k for k in self.usage_order if k in least_frequent_keys)
+            else:
+                oldest_key = least_frequent_keys[0]
+            del self.cache_data[oldest_key]
+            del self.usage_frequency[oldest_key]
+            self.usage_order.remove(oldest_key)
+            print(f"DISCARD: {oldest_key}")
 
-                if len(least_freq_keys) == 1:
-                    # Only one item with minimum frequency
-                    lfu_key = least_freq_keys[0]
-                else:
-                    # Multiple items with the same frequency,
-                    # find the least recently used
-                    lfu_key = min(least_freq_keys, key=lambda k: self.usage[k])
-
-                del self.cache_data[lfu_key]
-                del self.freq[lfu_key]
-                del self.usage[lfu_key]
-                print(f"DISCARD: {lfu_key}")
-
-            # Add new item
-            self.cache_data[key] = item
-            self.freq[key] = 1
-            self.usage[key] = self.time
-            self.time += 1
+        self.cache_data[key] = item
+        self.usage_frequency[key] = self.usage_frequency.get(key, 0) + 1
+        self.usage_order.append(key)
 
     def get(self, key):
         """ Get an item by key """
-        if key is None or key not in self.cache_data:
-            return None
-
-        # Increase frequency and update usage timestamp
-        self.freq[key] += 1
-        self.usage[key] = self.time
-        self.time += 1
-
-        return self.cache_data[key]
+        if key in self.cache_data:
+            self.usage_frequency[key] += 1
+            self.usage_order.remove(key)
+            self.usage_order.append(key)
+            return self.cache_data[key]
+        return None
