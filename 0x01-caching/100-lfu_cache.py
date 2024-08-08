@@ -22,9 +22,11 @@ class LFUCache(BaseCaching):
             self.usage_order.remove(key)
         elif len(self.cache_data) >= self.MAX_ITEMS:
             least_frequent = min(self.usage_frequency.values())
-            least_frequent_keys = [k for k, v in self.usage_frequency.items() if v == least_frequent]
+            least_frequent_keys = [k for k, v in self.usage_frequency.items()
+                                   if v == least_frequent]
             if len(least_frequent_keys) > 1:
-                oldest_key = next(k for k in self.usage_order if k in least_frequent_keys)
+                oldest_key = next(k for k in self.usage_order
+                                  if k in least_frequent_keys)
             else:
                 oldest_key = least_frequent_keys[0]
             del self.cache_data[oldest_key]
